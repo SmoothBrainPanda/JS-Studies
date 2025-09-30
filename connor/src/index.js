@@ -1,23 +1,21 @@
-import http from "node:http"
+import express from 'express'
+import projectRouter from './projects/route.js'
 
+const server = express()
 const port = 3000
 
-const server = http.createServer((req, res) => {
-	const method = req.method
-
-	if (method == 'GET') {
-		res.end('GET route')
-	} else if (method == 'POST') {
-		res.end('POST route')
-	} else if (method == 'PUT') {
-		res.end('PUT route')
-	} else if (method == 'DELETE') {
-		res.end('DELETE route')
-	} else {
-		res.end(`You done fucked up with your ${method} method`)
-	}
+server.get('/info', (req, res) => {
+	res.send('info route')
 })
 
+server.get('/health', (req, res) => {
+	res.send({
+		message: 'Server is running'
+	})
+})
+
+server.use('/projects', projectRouter)
+
 server.listen(port, () => {
-	console.log(`Server running on port ${port}`)
+	console.log(`Server is running on port ${port}`);
 })
