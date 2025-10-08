@@ -1,6 +1,22 @@
 import express from 'express'
+import { validator } from '../middleware/validator.js';
 
 const projectRouter = express.Router()
+
+projectRouter.use(validator)
+
+projectRouter.get('/', (req, res) => {
+	console.log('default');
+	res.send({
+		message: 'default'
+	})
+})
+
+projectRouter.post('/validator', (req, res) => {
+	res.send({
+		message: 'route hit successfully'
+	})
+})
 
 projectRouter.get('/all', (req, res) => {
 	console.log('projects all route');
@@ -8,11 +24,5 @@ projectRouter.get('/all', (req, res) => {
 		message: 'all projects'
 	})
 })
-
-// create the following routes:
-// /id
-// /create
-// /update
-// /delete
 
 export default projectRouter
