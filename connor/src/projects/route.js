@@ -18,10 +18,27 @@ projectRouter.post('/validator', (req, res) => {
 	})
 })
 
+// ----- READ -----
 projectRouter.get('/all', (req, res) => {
 	console.log('projects all route');
 	res.send({
 		message: 'all projects'
+	})
+})
+
+// single - id
+
+// ----- CREATE -----
+// create
+
+// ----- UPDATE -----
+// update
+
+// ----- DELETE -----
+projectRouter.delete('/delete', (req, res) => {
+	console.log('project delete');
+	res.send({
+		message: 'deleted'
 	})
 })
 
