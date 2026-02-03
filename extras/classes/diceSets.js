@@ -23,10 +23,10 @@ class DiceSets {
       this.diceRoll(this.diceSides);
       rolls += 1;
     }
-    // console.log(`You've rolled a d${this.diceSides} ${rolls} times!`);
+    console.log(`You've rolled a d${this.diceSides} ${rolls} times!`);
   }
 }
 
 const diceRoller = new DiceSets();
-// diceRoller.diceRoll(20);
+diceRoller.diceRoll(20);
 diceRoller.multipleDice(6);
