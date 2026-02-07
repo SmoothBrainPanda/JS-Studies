@@ -12,9 +12,12 @@ class Dice {
 
   roll() {
     const result = Math.floor(Math.random() * this.sides) + 1;
-    console.log(`You rolled a ${result}`);
+		return result
+    // console.log(`You rolled a ${result}`);
   }
 }
 
-const dice = new Dice();
-dice.roll();
+// const dice = new Dice();
+// dice.roll();
+
+export default Dice

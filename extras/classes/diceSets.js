@@ -1,32 +1,45 @@
-class DiceSets {
-  diceSides;
+import Dice from "./dice.js"
 
-  constructor(diceSet) {
-    if (diceSet) {
-      this.diceSides = diceSet;
+class DiceSet {
+	dieArray
+
+	constructor(data) {
+		this.dieArray = []
+
+    if (data.length) {
+      data.map((x) => {
+				const diceCount = x.dc
+				const diceType = x.dx
+
+				for (let i = 0; i <= diceCount; i++) {
+					const dice = new Dice(diceType)
+					this.dieArray.push(dice)
+				}
+			})
     } else {
-      this.diceSides = 20;
+			const dice = new Dice()
+      this.dieArray.push(dice)
     }
-    console.log(`Which Dice would you like to roll?`);
-  }
+	}
 
-  diceRoll(diceSet) {
-    this.diceSides = diceSet;
-    const result = Math.floor(Math.random() * this.diceSides) + 1;
-    console.log(`You rolled a ${result}`);
-    return this.diceSides;
-  }
-
-  multipleDice(x) {
-    let rolls = 0;
-    while (rolls < x) {
-      this.diceRoll(this.diceSides);
-      rolls += 1;
-    }
-    console.log(`You've rolled a d${this.diceSides} ${rolls} times!`);
-  }
+	rollAll() {
+		let count = 0
+		this.dieArray.map((x) => {
+			count += 1
+			const result = x.roll()
+			console.log(`Dice #${count}: ${result}`);
+		})
+	}
 }
 
-const diceRoller = new DiceSets();
-diceRoller.diceRoll(20);
-diceRoller.multipleDice(6);
+const set = [
+	{
+		dx: 12,
+		dc: 4
+	}
+]
+
+const multiRoller = new DiceSet(set)
+multiRoller.rollAll()
+
+export default DiceSet
