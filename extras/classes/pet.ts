@@ -57,10 +57,18 @@ class Pet implements IPet {
 	}
 
 	checkHealth() {
-		//
+		if (this.hunger <= 25) this.happiness += 10
+		if (this.hunger <= 50) this.happiness += 5
+		if (this.hunger <= 75) this.happiness -= 5
+		if (this.hunger <= 99) this.happiness -= 10
+		if (this.hunger >= 100) this.alive = false
 	}
 
 	checkHappiness() {
+		//
+	}
+
+	checkPet() {
 		//
 	}
 

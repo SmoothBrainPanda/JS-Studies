@@ -6,6 +6,10 @@ class Animal {
   makeSound() {
     console.log(`${this.name} makes a sound`);
   }
+
+	static parentTest() {
+		console.log('Parent static method');
+	}
 }
 
 class Dog extends Animal {
@@ -17,8 +21,14 @@ class Dog extends Animal {
   bark() {
     console.log(`${this.name} barks!`);
   }
+
+	static childTest() {
+		console.log('Child static method');
+	}
 }
 
 const myDog = new Dog("Poundcake", "Long");
 myDog.makeSound();
 myDog.bark();
+Dog.parentTest()
+Dog.childTest()
