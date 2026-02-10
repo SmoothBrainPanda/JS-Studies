@@ -1,0 +1,12 @@
+{
+  "name": "wizardfight",
+  "version": "0.0.1",
+  "description": "A game about wizards fighting",
+  "license": "ISC",
+  "author": "Khasmodan & Smoothbrainpanda",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
