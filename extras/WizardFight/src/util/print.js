@@ -4,13 +4,14 @@ export function characterCreated(data) {
 		|New Character Created!	|
 		|-----------------------|
 		| Name	:	${data.name}	|
-		| HP	:	${data.hp}	|
+		| HP	:	${data.currentHp}/${data.maxHp}	|
 		|-----------------------|
 		| Stats			|
 		| STR	:	${data.stats.str}	|
 		| DEX	:	${data.stats.dex}	|
 		| INT	:	${data.stats.int}	|
-		| WIS	:	${data.stats.con}	|
+		| WIS	:	${data.stats.wis}	|
+		| CON	:	${data.stats.con}	|
 		|_______________________|
 	`);
 }
