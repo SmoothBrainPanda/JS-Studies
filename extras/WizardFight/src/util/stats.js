@@ -32,6 +32,14 @@ function statsMod(job, stats) {
 				wis: stats.wis,
 				con: stats.con
 			}
+		default:
+			return {
+				str: 7,
+				dex: 7,
+				int: 7,
+				wis: 7,
+				con: 7
+			}
 	}
 }
 

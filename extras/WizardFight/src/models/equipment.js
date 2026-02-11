@@ -36,6 +36,10 @@ const Elements = {
 	NONE: "none"
 }
 
+const ElementalMatchups = {
+	//
+}
+
 const ElementDamageMultiplier = {
 	VULNERABLE: 1.5,
 	NEUTRAL: 1.0,
@@ -44,7 +48,8 @@ const ElementDamageMultiplier = {
 }
 
 export function testEquip() {
-	const rarity = "epic"
+	const rarity = "uncommon"
 	console.log(`Rarity multi for ${rarity}: ${RarityDamageMultiplier[rarity]}`);
-	console.log(`Rarity color for ${rarity}: ${RarityColors[rarity]}`);
+	console.log(`Rarity color for ${rarityLabel(rarity)}`);
+	console.log(RarityDamageMultiplier);
 }

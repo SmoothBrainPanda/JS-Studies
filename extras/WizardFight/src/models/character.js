@@ -1,4 +1,4 @@
-import * as print from '../util/print.js'
+import * as rng from "../util/rng.js"
 
 class Character {
 	constructor(data) {
@@ -10,22 +10,24 @@ class Character {
 			dex: data.stats.dex,
 			int: data.stats.int,
 			wis: data.stats.wis,
-			con: data.stats.con
+			con: data.stats.con,
+			atk: 10, // TODO: atkMod logic
+			def: 10 // TODO : defMod logic
 		}
-		// this.equipment = equip()
-		this.status = []
+		this.status = [] // TODO: statusEffect logic
 		this.alive = true
-
-		print.characterCreated(this)
 	}
 
-	attack() {
-		//
-	}
+	takeDamage(attack) {
+		const damage = rng.randomDmg(attack.dmgLow, attack.dmgHigh)
 
-	takeDamage(damage) {
-		this.currentHp -= damage
-		console.log(`${this.name}'s HP: ${this.currentHp}/${this.maxHp}`);
+		if (this.def > attack.pierce) {
+			this.currentHp -= damage
+		} else {
+			if (rng.coinFlip()) this.currentHp -= damage
+		}
+
+		console.log(`${this.name} took ${damage} points of damage`);
 	}
 
 	heal() {
@@ -36,20 +38,18 @@ class Character {
 		this.hp = this.maxHp
 	}
 
-	checkStatus() {
-		if (ded()) {
-			console.log("YOU DIED");
-		} else {
-			console.log("Oh my god it's Jason Bourne");
+	checkAlive() {
+		if (this.currentHp < 1) {
+			this.alive = false
 		}
+
+		return this.alive
 	}
 
 	ded() {
-		if (this.hp > 0) {
-			console.log("It's Alive");
+		if (this.currentHp > 0) {
 			return false
 		} else {
-			console.log("He ded");
 			return true
 		}
 	}
