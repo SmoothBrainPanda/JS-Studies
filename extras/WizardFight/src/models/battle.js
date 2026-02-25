@@ -9,13 +9,13 @@ class Battle {
 	fight() {
 		console.log('Fight start!');
 		let round = 1
-		while (this.red.checkAlive() && this.blue.checkAlive()) {
+		while (this.red.ded() && this.blue.ded()) {
 			this.turn(round)
 			round++
 		}
 
-		if (this.red.checkAlive()) console.log(`${this.red.name} wins!`);
-		if (this.blue.checkAlive()) console.log(`${this.blue.name} wins!`);
+		if (this.red.ded()) console.log(`${this.red.name} wins!`);
+		if (this.blue.ded()) console.log(`${this.blue.name} wins!`);
 	}
 
 	turn(num) {

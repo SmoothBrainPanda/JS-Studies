@@ -30,6 +30,7 @@ class Monster {
 
 	attack(target) {
 		const atk = this.attacks[Math.floor(Math.random() * this.attacks.length)]
+		console.log(`${this.name} used ${this.atk.name}.`);
 		console.log(atk.message);
 		target.takeDamage(atk)
 	}
@@ -37,7 +38,7 @@ class Monster {
 	takeDamage(attack) {
 		const damage = rng.randomDmg(attack.dmgLow, attack.dmgHigh)
 
-		if (this.def > attack.pierce) {
+		if (this.def < attack.pierce) {
 			this.currentHp -= damage
 		} else {
 			if (rng.coinFlip()) this.currentHp -= damage
@@ -46,7 +47,7 @@ class Monster {
 		console.log(`${this.name} took ${damage} points of damage`);
 	}
 
-	checkAlive() {
+	ded() {
 		if (this.currentHp < 1) {
 			this.alive = false
 		}

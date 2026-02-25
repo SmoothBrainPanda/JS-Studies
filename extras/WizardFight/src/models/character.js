@@ -38,20 +38,9 @@ class Character {
 		this.hp = this.maxHp
 	}
 
-	checkAlive() {
-		if (this.currentHp < 1) {
-			this.alive = false
-		}
-
-		return this.alive
-	}
-
 	ded() {
-		if (this.currentHp > 0) {
-			return false
-		} else {
-			return true
-		}
+		if (this.currentHp > 0) return false
+		return true
 	}
 }
 
