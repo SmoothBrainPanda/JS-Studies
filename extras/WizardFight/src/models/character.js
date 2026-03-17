@@ -1,58 +1,82 @@
-import * as print from '../util/print.js'
+import * as rng from "../util/rng.js";
 
 class Character {
-	constructor(data) {
-		this.name = data.name
-		this.maxHp = 100
-		this.currentHp = this.maxHp
-		this.stats = {
-			str: data.stats.str,
-			dex: data.stats.dex,
-			int: data.stats.int,
-			wis: data.stats.wis,
-			con: data.stats.con
-		}
-		// this.equipment = equip()
-		this.status = []
-		this.alive = true
+  constructor(data) {
+    this.name = data.name;
+    this.maxHp = 100;
+    this.currentHp = this.maxHp;
+    this.stats = {
+      str: data.stats.str,
+      dex: data.stats.dex,
+      int: data.stats.int,
+      wis: data.stats.wis,
+      con: data.stats.con,
+    };
+    this.status = [];
+    this.alive = true;
+    this.equipment = {
+      head: null,
+      torso: null,
+      legs: null,
+      hand: null,
+    };
+  }
 
-		print.characterCreated(this)
-	}
+  takeDamage(attack) {
+    const actualDef = this.getActualDef();
+    const range = attack.actualAtk + actualDef;
 
-	attack() {
-		//
-	}
+    const hit = Math.floor(Math.random() * range) + 1;
 
-	takeDamage(damage) {
-		this.currentHp -= damage
-		console.log(`${this.name}'s HP: ${this.currentHp}/${this.maxHp}`);
-	}
+    if (hit > actualDef) {
+      this.currentHp -= attack.actualAtk;
+      console.log(`${this.name} took ${attack.actualAtk} points of damage`);
+    } else {
+      console.log("It was super uneffective");
+    }
+  }
 
-	heal() {
-		//
-	}
+  heal() {
+    //
+  }
 
-	fullRest() {
-		this.hp = this.maxHp
-	}
+  fullRest() {
+    this.hp = this.maxHp;
+  }
 
-	checkStatus() {
-		if (ded()) {
-			console.log("YOU DIED");
-		} else {
-			console.log("Oh my god it's Jason Bourne");
-		}
-	}
+  isAlive() {
+    if (this.currentHp > 0) return true;
+    return false;
+  }
 
-	ded() {
-		if (this.hp > 0) {
-			console.log("It's Alive");
-			return false
-		} else {
-			console.log("He ded");
-			return true
-		}
-	}
+  equip(item) {
+    this.equipment[item.slot] = item;
+  }
+
+  getActualAtk(raw) {
+    let elementArray = [];
+    let statusArray = [];
+    let equipmentMods = 0;
+    let pierceMod = 0;
+    for (const item of Object.values(this.equipment)) {
+      if (item?.type == "weapon") {
+        equipmentMods += item.atkMod;
+        pierceMod += item.pierce;
+        if (item.dmgType.length)
+          statusArray = [...statusArray, ...item.dmgType];
+        if (item.elementType.length)
+          elementArray = [...elementArray, ...item.elementType];
+      }
+    }
+
+    const actualAtk = raw + this.stats.atk + equipmentMods;
+
+    return { actualAtk, pierceMod, statusArray, elementArray };
+  }
+
+  getActualDef() {
+    return this.stats.def;
+  }
 }
 
-export default Character
+export default Character;

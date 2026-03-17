@@ -1,21 +1,25 @@
-import Character from "./models/character.js";
 import characterCreator from "./models/jobs/index.js";
-import { testEquip } from "./models/equipment.js";
+import Monster from "./models/monster.js";
+import Battle from "./models/battle.js";
+import equipment from "./data/equipment.js";
 
-const characterData = {
-	name: "Dave",
-	stats: {
-		str: 7,
-		dex: 15,
-		int: 19,
-		wis: 9,
-		con: 10
-	},
-	job: 'Barbarian'
-}
+const data = {
+  name: "Dave",
+  stats: {
+    str: 7,
+    dex: 15,
+    int: 19,
+    wis: 9,
+    con: 10,
+  },
+  job: "",
+};
 
-const dave = characterCreator(characterData)
-dave.takeDamage(10)
-// const dave = new Character(characterData)
-// testEquip()
-
+const monster = new Monster();
+const dave = characterCreator(data);
+const testHand = equipment[0];
+const testHead = equipment[1];
+dave.equip(testHand);
+dave.equip(testHead);
+const battle = new Battle(dave, monster);
+battle.fight();

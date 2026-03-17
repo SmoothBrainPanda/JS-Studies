@@ -1,19 +1,23 @@
 import Barbarian from "./barbarian.js";
+import Dood from "./dood.js";
 
-function characterCreator(character) {
-	switch(character.job) {
-		case "Barbarian":
-			return new Barbarian(character)
-		case "Ranger":
-			console.log("Ranger");
-			break
-		case "Wizard":
-			console.log("Wizard");
-			break
-		case "Fighter":
-			console.log("Fighter");
-			break
-	}
+function characterCreator(data) {
+  switch (data.job) {
+    case "barbarian":
+      return new Barbarian(data);
+    case "ranger":
+      console.log("Ranger");
+      break;
+    case "wizard":
+      console.log("Wizard");
+      break;
+    case "fighter":
+      console.log("Fighter");
+      break;
+    default:
+      console.log("Just a dood");
+      return new Dood(data);
+  }
 }
 
-export default characterCreator
+export default characterCreator;
