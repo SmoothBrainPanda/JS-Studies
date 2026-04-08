@@ -1,4 +1,7 @@
 import * as rng from "../util/rng.js";
+import * as battleUtil from "../util/battle.js"
+import { addMessage } from "../managers/messages.js"
+import { determineEffect, procElements, resolveProcs } from "../util/elements.js"
 
 class Character {
   constructor(data) {
@@ -12,33 +15,72 @@ class Character {
       wis: data.stats.wis,
       con: data.stats.con,
     };
-    this.status = [];
     this.alive = true;
     this.equipment = {
       head: null,
       torso: null,
       legs: null,
       hand: null,
-    };
+			accessory: null,
+    },
+    this.status = []
+		this.blind = false
+		this.stunned = false
+		this.resistances = []
+		this.immunities = []
+		this.vulnerabilities = []
+  }
+
+  attack(target) {
+		if (this.stunned) {
+			addMessage(`${this.name} is stunned.`)
+			return
+		}
+
+    const atk = this.attacks[Math.floor(Math.random() * this.attacks.length)];
+
+		addMessage(atk.message)
+    atk.rawDmgValue = rng.randomDmg(atk.dmgLow, atk.dmgHigh);
+
+
+		if (this.blind) {
+			addMessage(`${this.name} is blinded.`)
+			atk.rawDmgValue = Math.floor(atk.rawDmgValue * 0.75)
+		}
+
+    const actualAtk = this.getActualAtk(atk);
+
+    target.takeDamage(actualAtk);
   }
 
   takeDamage(attack) {
     const actualDef = this.getActualDef();
     const range = attack.actualAtk + actualDef;
 
-    const hit = Math.floor(Math.random() * range) + 1;
+    let hit = Math.floor(Math.random() * range) + 1;
 
-    if (hit > actualDef) {
-      this.currentHp -= attack.actualAtk;
-      console.log(`${this.name} took ${attack.actualAtk} points of damage`);
-    } else {
-      console.log("It was super uneffective");
+		const dmg = this.elementEffects(attack.elementArray, hit)
+
+    if (hit > (actualDef - attack.pierceMods)) {
+      this.currentHp -= dmg
+			addMessage(`${this.name} took ${attack.actualAtk} points of damage`)
+		} else {
+			addMessage("The attack missed.");
     }
   }
 
-  heal() {
-    //
+	statusDmg(value) {
+		this.currentHp -= value
+	}
+
+	heal(value) {
+    this.currentHp = this.currentHp + value
+		if (this.currentHp > this.maxHp) this.currentHp = this.maxHp
   }
+
+	revive() {
+		//
+	}
 
   fullRest() {
     this.hp = this.maxHp;
@@ -49,34 +91,116 @@ class Character {
     return false;
   }
 
-  equip(item) {
-    this.equipment[item.slot] = item;
+  equip(items) {
+		items.map((x) => {
+			if (!x) return
+
+			this.equipment[x.slot] = x
+
+			if (x.statusMod) {
+				switch (x.statusMod.type) {
+					case "resistance":
+						this.resistances = [...this.resistances, ...x.statusMod.status]
+						break
+					case "immunity":
+						this.immunities = [...this.immunities, ...x.statusMod.status]
+						break
+					case "vulnerability":
+						this.vulnerabilities = [...this.vulnerabilities, ...x.statusMod.status]
+						break
+					default:
+						return
+				}
+			}
+		})
   }
 
+	unequip(slot) {
+		this.equipment[slot] = null
+		this.resistances = []
+
+		const newEquipList = Object.values(this.equipment)
+		this.equip(newEquipList)
+	}
+
   getActualAtk(raw) {
-    let elementArray = [];
-    let statusArray = [];
-    let equipmentMods = 0;
-    let pierceMod = 0;
-    for (const item of Object.values(this.equipment)) {
-      if (item?.type == "weapon") {
-        equipmentMods += item.atkMod;
-        pierceMod += item.pierce;
-        if (item.dmgType.length)
-          statusArray = [...statusArray, ...item.dmgType];
-        if (item.elementType.length)
-          elementArray = [...elementArray, ...item.elementType];
-      }
-    }
+		let { atkMods, pierceMods, statusArray, elementArray } = battleUtil.getModifiersByWeaponType(this.equipment)
 
-    const actualAtk = raw + this.stats.atk + equipmentMods;
-
-    return { actualAtk, pierceMod, statusArray, elementArray };
+    const actualAtk = raw.rawDmgValue + this.stats.atk + atkMods
+    return { actualAtk, pierceMods, statusArray, elementArray };
   }
 
   getActualDef() {
-    return this.stats.def;
+		let { defMods } = battleUtil.getModifiersByWeaponType(this.equipment)
+
+		const actualDef = this.stats.def + defMods
+    return actualDef;
   }
+
+	elementEffects (elementArray, hit) {
+		const dmgPerEffect = hit / elementArray.length
+		let elementSlices = elementArray.length
+		let returnValue
+
+		const immunitiesCount = elementArray.filter(effect => this.immunities.includes(effect.type)).length
+		const immunitiesList = elementArray.filter(effect => this.immunities.includes(effect.type))
+		const resistancesCount = elementArray.filter(effect => this.resistances.includes(effect.type)).length
+		const resistancesList = elementArray.filter(effect => this.resistances.includes(effect.type))
+ 		const vulnerabilitiesCount = elementArray.filter(effect => this.vulnerabilities.includes(effect.type)).length
+		const vulnerabilitiesList = elementArray.filter(effect => this.vulnerabilities.includes(effect.type))
+
+		const overallCount = immunitiesCount || 0 + resistancesCount || 0 + vulnerabilitiesCount || 0
+
+		if (immunitiesCount) {
+			if (elementArray.length > 1) {
+				elementSlices -= elementArray.filter(effect => this.immunities.includes(effect)).length
+			} else {
+				elementSlices = 0
+			}
+			addMessage(`It's like you're not even trying! Part of the attack did not go through.`)
+		}
+		if (resistancesCount) {
+			if (elementArray.length > 1) {
+				elementSlices -= (elementArray.filter(effect => this.resistances.includes(effect)).length * 0.5)
+			} else {
+				elementSlices = 0.5
+			}
+
+			this.status = [...this.status, ...determineEffect(resistancesList, 25)]
+			addMessage("Womp Womp. Part of the attack did was resisted.")
+		}
+		if (vulnerabilitiesCount) {
+			if (elementArray.length > 1) {
+				elementSlices += (elementArray.filter(effect => this.vulnerabilities.includes(effect)).length * 2)
+			} else {
+				elementSlices = 2
+			}
+
+			this.status = [...this.status, ...determineEffect(vulnerabilitiesList, 99)]
+			addMessage(`I don't think he'll recover from that one. That did extra damage!`)
+		}
+
+		if (overallCount < 1) {
+			this.status = [...this.status, ...determineEffect(elementArray, 50)]
+		}
+
+		returnValue = Math.ceil(elementSlices * dmgPerEffect)
+
+		return returnValue
+	}
+
+	startTurn () {
+		console.log(this.stunned);
+		addMessage(`---------------\n${this.name} starts thier turn.`)
+		const procArray = procElements(this.status)
+		const effects = resolveProcs(procArray)
+
+		this.status = effects.statusArray
+		this.statusDmg(effects.totalDmg)
+
+		this.stunned = effects.stunned
+		this.blind = effects.blind
+	}
 }
 
 export default Character;

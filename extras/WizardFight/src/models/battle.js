@@ -1,3 +1,5 @@
+import { addMessage, print } from "../managers/messages.js"
+
 class Battle {
   constructor(hero, npc) {
     this.hero = hero;
@@ -5,32 +7,33 @@ class Battle {
   }
 
   fight() {
-    console.log("Fight Start!");
+		addMessage('Fight Start!')
     let round = 1;
     while (this.hero.isAlive() && this.npc.isAlive()) {
       this.turn(round);
       round++;
+			// if (round > 4) return false
     }
 
-    if (this.hero.isAlive()) console.log(`${this.hero.name} wins!`);
-    if (this.npc.isAlive()) console.log(`${this.npc.name} wins!`);
+    if (this.hero.isAlive()) addMessage(`${this.hero.name} wins!`);
+    if (this.npc.isAlive()) addMessage(`${this.npc.name} wins!`);
+
+		print()
   }
 
   turn(num) {
-    console.log("------------");
-    console.log(`Turn #${num}`);
-    this.hero.attack(this.npc);
-    console.log(`${this.npc.name} hp: ${this.npc.currentHp}/${this.npc.maxHp}`);
-    if (!this.npc.isAlive()) return false;
-    this.npc.attack(this.hero);
-    console.log(
-      `${this.hero.name} hp: ${this.hero.currentHp}/${this.hero.maxHp}`
-    );
-    console.log("------------");
-  }
+		addMessage(`---------------\nTurn #${num}`);
 
-  print() {
-    //
+		this.hero.startTurn()
+		this.hero.attack(this.npc);
+
+		addMessage(`${this.npc.name} hp: ${this.npc.currentHp}/${this.npc.maxHp}`);
+    if (!this.npc.isAlive()) return false;
+
+		this.npc.startTurn()
+    this.npc.attack(this.hero);
+
+		addMessage(`${this.hero.name} hp: ${this.hero.currentHp}/${this.hero.maxHp}`);
   }
 }
 

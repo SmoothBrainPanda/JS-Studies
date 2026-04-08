@@ -1,39 +1,46 @@
 import * as rng from "../util/rng.js";
+import { addMessage } from "../managers/messages.js"
+import { determineEffect, procElements, resolveProcs } from "../util/elements.js"
 
 class Monster {
-  constructor() {
-    this.name = "Gobbo";
-    this.maxHp = 100;
+  constructor(data) {
+    this.name = data.name;
+    this.maxHp = data.maxHp;
     this.currentHp = this.maxHp;
-    this.def = 15;
-    this.atk = 12;
-    this.attacks = [
-      {
-        name: "A shiv to the Knee",
-        dmgHigh: 15,
-        dmgLow: 0,
-        pierce: 5,
-        dmgType: "none",
-        message: `${this.name} used their nasty shiv.`,
-      },
-      {
-        name: "A pocket full of sand.",
-        dmgHigh: 10,
-        dmgLow: 0,
-        pierce: 5,
-        dmgType: "none",
-        message: `${this.name} threw sand in their opponents eyes.`,
-      },
-    ];
+    this.status = []
+		this.blind = false
+		this.stunned = false
+		this.resistances = []
+		this.immunities = []
+		this.vulnerabilities = []
+		this.stats = {
+			def: data.stats.def,
+			atk: data.stats.atk
+		}
+
+    this.attacks = data.attacks
+
   }
 
   attack(target) {
-    const atk = this.attacks[Math.floor(Math.random() * this.attacks.length)];
-    console.log(atk.message);
-    const rawDmgValue = rng.randomDmg(atk.dmgLow, atk.dmgHigh);
+		if (this.stunned) {
+			addMessage(`${this.name} is stunned.`)
+			return
+		}
 
-    const actualAtk = this.getActualAtk(rawDmgValue);
-    actualAtk.pierceMod += atk.pierce;
+    const atk = this.attacks[Math.floor(Math.random() * this.attacks.length)];
+
+		addMessage(atk.message)
+    atk.rawDmgValue = rng.randomDmg(atk.dmgLow, atk.dmgHigh);
+
+
+		if (this.blind) {
+			addMessage(`${this.name} is blinded.`)
+			atk.rawDmgValue = Math.floor(atk.rawDmgValue * 0.75)
+		}
+
+    const actualAtk = this.getActualAtk(atk);
+
     target.takeDamage(actualAtk);
   }
 
@@ -43,13 +50,17 @@ class Monster {
 
     const hit = Math.floor(Math.random() * range) + 1;
 
-    if (hit > actualDef) {
-      this.currentHp -= attack.actualAtk;
-      console.log(`${this.name} took ${attack.actualAtk} points of damage`);
-    } else {
-      console.log("It was super uneffective");
+    if (hit > (actualDef - attack.pierceMods)) {
+      this.currentHp -= attack.actualAtk
+			addMessage(`${this.name} took ${attack.actualAtk} points of damage`)
+		} else {
+			addMessage("The attak missed.");
     }
   }
+
+	statusDmg(value) {
+		this.currentHp -= value
+	}
 
   heal() {
     //
@@ -61,29 +72,79 @@ class Monster {
   }
 
   getActualAtk(raw) {
-    let elementArray = [];
-    let statusArray = [];
-    let equipmentMods = 0;
-    let pierceMod = 0;
-    // for (const item of Object.values(this.equipment)) {
-    //   if (item?.type == "weapon") {
-    //     equipmentMods += item.atkMod;
-    //     pierceMod += item.pierce;
-    //     if (item.dmgType.length)
-    //       statusArray = [...statusArray, ...item.dmgType];
-    //     if (item.elementType.length)
-    //       elementArray = [...elementArray, ...item.elementType];
-    //   }
-    // }
+		const pierceMods = 0
+		const statusArray = []
+		const elementArray = raw.elementType
 
-    const actualAtk = raw + this.atk + equipmentMods;
+    const actualAtk = raw.rawDmgValue + this.stats.atk
 
-    return { actualAtk, pierceMod, statusArray, elementArray };
+    return { actualAtk, pierceMods, statusArray, elementArray };
   }
 
   getActualDef() {
-    return this.def;
+		const actualDef = this.stats.def
+		return actualDef;
   }
+
+	elementEffects (elementArray, hit) {
+		const dmgPerEffect = hit / elementArray.length
+		let elementSlices = elementArray.length
+		let returnValue
+
+		const immunitiesCount = elementArray.filter(effect => this.immunities.includes(effect.type)).length
+		const immunitiesList = elementArray.filter(effect => this.immunities.includes(effect.type))
+		const resistancesCount = elementArray.filter(effect => this.resistances.includes(effect.type)).length
+		const resistancesList = elementArray.filter(effect => this.resistances.includes(effect.type))
+ 		const vulnerabilitiesCount = elementArray.filter(effect => this.vulnerabilities.includes(effect.type)).length
+		const vulnerabilitiesList = elementArray.filter(effect => this.vulnerabilities.includes(effect.type))
+
+		const overallCount = immunitiesCount || 0 + resistancesCount || 0 + vulnerabilitiesCount || 0
+
+		if (immunitiesCount) {
+			if (elementArray.length > 1) {
+				elementSlices -= elementArray.filter(effect => this.immunities.includes(effect)).length
+			} else {
+				elementSlices = 0
+			}
+			addMessage(`It's like you're not even trying! Part of the attack did not go through.`)
+		}
+		if (resistancesCount) {
+			if (elementArray.length > 1) {
+				elementSlices -= (elementArray.filter(effect => this.resistances.includes(effect)).length * 0.5)
+			} else {
+				elementSlices = 0.5
+			}
+
+			this.status = [...this.status, ...determineEffect(resistancesList, 25)]
+			addMessage("Womp Womp. Part of the attack did was resisted.")
+		}
+		if (vulnerabilitiesCount) {
+			if (elementArray.length > 1) {
+				elementSlices += (elementArray.filter(effect => this.vulnerabilities.includes(effect)).length * 2)
+			} else {
+				elementSlices = 2
+			}
+
+			this.status = [...this.status, ...determineEffect(vulnerabilitiesList, 99)]
+			addMessage(`I don't think he'll recover from that one. That did extra damage!`)
+		}
+
+		returnValue = Math.ceil(elementSlices * dmgPerEffect)
+
+		return returnValue
+	}
+
+	startTurn () {
+		addMessage(`---------------\n${this.name} starts thier turn`)
+		const procArray = procElements(this.status)
+		const effects = resolveProcs(procArray)
+
+		this.status = effects.statusArray
+		this.statusDmg(effects.totalDmg)
+
+		this.stunned = effects.stunned
+		this.blind = effects.blind
+	}
 }
 
 export default Monster;

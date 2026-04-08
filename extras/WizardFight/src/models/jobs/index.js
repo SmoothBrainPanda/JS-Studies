@@ -15,8 +15,7 @@ function characterCreator(data) {
       console.log("Fighter");
       break;
     default:
-      console.log("Just a dood");
-      return new Dood(data);
+return new Dood(data);
   }
 }
 

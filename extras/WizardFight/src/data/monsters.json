@@ -1,0 +1,180 @@
+{
+	"goblin": {
+			"name": "Fodder",
+			"maxHp": 50,
+			"stats": {
+					"atk": 15,
+					"def": 10
+			},
+			"attacks": [
+				{
+					"name": "a shiv to the knee",
+					"dmgHigh": 15,
+					"dmgLow": 10,
+					"pierce": 10,
+					"dmgType": "none",
+					"message": "lunged with their rusty shiv!"
+				},
+				{
+					"name": "a pocket full of sand",
+					 "dmgHigh": 10,
+					 "dmgLow": 5,
+					 "pierce": 2,
+					 "dmgType": "none",
+					 "message": "threw a pocketful of sand!"
+				}
+		]
+	},
+	"man": {
+			"name": "Slave",
+			"maxHp": 10,
+			"stats": {
+					"atk": 5,
+					"def": 5
+			},
+			"attacks": [
+				{
+					"name": "threw a limp fist",
+					"dmgHigh": 5,
+					"dmgLow": 0,
+					"pierce": 0,
+					"dmgType": "none",
+					"message": "attempted to punch!"
+				}
+		]
+	},
+	"god": {
+			"name": "GOD",
+			"maxHp": 500000,
+			"stats": {
+					"atk": 100000,
+					"def": 100000
+			},
+			"attacks": [
+				{
+					"name": "bitch slap",
+					"dmgHigh": 0,
+					"dmgLow": 0,
+					"pierce": 0,
+					"dmgType": "none",
+					"message": "taught them a lesson!"
+				},
+				{
+					"name": "Thanos snap",
+					 "dmgHigh": 0,
+					 "dmgLow": 0,
+					 "pierce": 0,
+					 "dmgType": "none",
+					 "message": "unmade them!"
+				}
+		]
+	},
+	"goblin_but_fire": {
+			"name": "Fire Gobbo",
+			"maxHp": 50,
+			"stats": {
+					"atk": 15,
+					"def": 10
+			},
+			"attacks": [
+				{
+					"name": "firebean",
+					"dmgHigh": 15,
+					"dmgLow": 10,
+					"pierce": 10,
+					"dmgType": "none",
+					"elementType": [{
+						"type": "fire",
+						"elementEffectChance": 10,
+						"stackAmount": 2
+					}],
+					"message": "spat a firebean!"
+				}
+		]
+	},
+	"winged_volcano_yeti": {
+			"name": "W_V_Y",
+			"maxHp": 150,
+			"stats": {
+					"atk": 16,
+					"def": 20
+			},
+			"attacks": [
+				{
+					"name": "Icy Hot Leafblower",
+					"dmgHigh": 20,
+					"dmgLow": 15,
+					"pierce": 10,
+					"dmgType": "none",
+					"elementType": [
+						{
+							"type": "fire",
+							"elementEffectChance": 10,
+							"stackAmount": 2
+						},
+						{
+							"type": "ice",
+							"elementEffectChance": 10,
+							"stackAmount": 3
+						},
+						{
+							"type": "wind",
+							"elementEffectChance": 10,
+							"stackAmount": 4
+						}
+						],
+					"message": "used their fancy leafblower!"
+				}
+			]
+		},
+	"5_colour_omnath": {
+			"name": "Omnath, Locus of All",
+			"maxHp": 150,
+			"stats": {
+					"atk": 16,
+					"def": 20
+			},
+			"attacks": [
+				{
+					"name": "Make you cry in WUBRG",
+					"dmgHigh": 20,
+					"dmgLow": 15,
+					"pierce": 10,
+					"dmgType": "none",
+					"elementType": [
+						{
+							"type": "fire",
+							"elementEffectChance": 10,
+							"stackAmount": 3
+						},
+						{
+							"type": "ice",
+							"elementEffectChance": 10,
+							"stackAmount": 3
+						},
+						{
+							"type": "wind",
+							"elementEffectChance": 10,
+							"stackAmount": 1
+						},
+						{
+							"type": "water",
+							"elementEffectChance": 10,
+							"stackAmount": 3
+						},
+						{
+							"type": "lightning",
+							"elementEffectChance": 10,
+							"stackAmount": 3
+						},
+						{
+							"type": "earth",
+							"elementEffectChance": 10,
+							"stackAmount": 1
+						}
+						],
+					"message": "used their fancy leafblower!"
+				}
+			]
+		}
+	}

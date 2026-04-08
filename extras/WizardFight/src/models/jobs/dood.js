@@ -27,15 +27,6 @@ class Dood extends Character {
     ];
   }
 
-  attack(target) {
-    const atk = this.attacks[Math.floor(Math.random() * this.attacks.length)];
-    console.log(atk.message);
-    const rawDmgValue = rng.randomDmg(atk.dmgLow, atk.dmgHigh);
-
-    const actualAtk = this.getActualAtk(rawDmgValue);
-    actualAtk.pierceMod += atk.pierce;
-    target.takeDamage(actualAtk);
-  }
 }
 
 export default Dood;
