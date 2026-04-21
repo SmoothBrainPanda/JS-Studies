@@ -38,7 +38,9 @@ function statsMod(job, stats) {
 				dex: 7,
 				int: 7,
 				wis: 7,
-				con: 7
+				con: 7,
+				atk: 10,
+				def: 10
 			}
 	}
 }

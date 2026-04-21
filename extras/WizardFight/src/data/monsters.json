@@ -1,0 +1,134 @@
+{
+	"goblin": {
+		"name": "fodder",
+		"maxHp": 50,
+		"stats": {
+			"atk": 15,
+			"def": 10
+		},
+		"attacks": [
+			{
+				"name": "a shiv to the knee",
+				"dmgHigh": 15,
+				"dmgLow": 10,
+				"pierce": 10,
+				"dmgType": "none",
+				"message": "lunged with their rusty shiv!"
+			},
+			{
+				"name": "a pocket full of sand",
+			 	"dmgHigh": 10,
+			 	"dmgLow": 5,
+			 	"pierce": 2,
+			 	"dmgType": "none",
+			 	"message": "threw a pocketful of sand!"
+			}
+		]
+	},
+	"goblin_but_fire": {
+		"name": "Guttersnipe",
+		"maxHp": 50,
+		"stats": {
+			"atk": 15,
+			"def": 10
+		},
+		"attacks": [
+			{
+				"name": "firebean",
+				"dmgHigh": 15,
+				"dmgLow": 10,
+				"pierce": 10,
+				"dmgType": "none",
+				"elementType": [{
+					"type": "fire",
+					"elementEffectChance": 10,
+					"stackAmount": 2
+				}],
+				"message": "shot a firebean!"
+			}
+		]
+	},
+	"winged_volcano_yeti": {
+		"name": "Winged Volcano Yeti",
+		"maxHp": 150,
+		"stats": {
+			"atk": 16,
+			"def": 20
+		},
+		"attacks": [
+			{
+				"name": "Icy Hot Leafblower",
+				"dmgHigh": 20,
+				"dmgLow": 15,
+				"pierce": 10,
+				"dmgType": "none",
+				"elementType": [{
+					"type": "fire",
+					"elementEffectChance": 10,
+					"stackAmount": 2
+				},
+				{
+					"type": "wind",
+					"elementEffectChance": 10,
+					"stackAmount": 1
+				},
+				{
+					"type": "ice",
+					"elementEffectChance": 10,
+					"stackAmount": 3
+				}
+				],
+				"message": "used their IcyHot Leafblower™!"
+			}
+		]
+	},
+	"5_color_omnath": {
+		"name": "Omnath, Locus of All",
+		"maxHp": 150,
+		"stats": {
+			"atk": 16,
+			"def": 20
+		},
+		"attacks": [
+			{
+				"name": "Make you cry in WUBRG",
+				"dmgHigh": 20,
+				"dmgLow": 15,
+				"pierce": 10,
+				"dmgType": "none",
+				"elementType": [{
+					"type": "fire",
+					"elementEffectChance": 10,
+					"stackAmount": 3
+				},
+				{
+					"type": "wind",
+					"elementEffectChance": 10,
+					"stackAmount": 1
+				},
+				{
+					"type": "ice",
+					"elementEffectChance": 10,
+					"stackAmount": 3
+				},
+				{
+					"type": "water",
+					"elementEffectChance": 10,
+					"stackAmount": 3
+				},
+				{
+					"type": "lightning",
+					"elementEffectChance": 10,
+					"stackAmount": 3
+				},
+				{
+					"type": "earth",
+					"elementEffectChance": 10,
+					"stackAmount": 1
+				}
+				],
+				"message": "Makes you cry in WUBRG!"
+			}
+		]
+	}
+}

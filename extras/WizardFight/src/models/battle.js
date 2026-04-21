@@ -1,34 +1,39 @@
-class Battle {
-	constructor(red, blue) {
-		this.red = red
-		this.blue = blue
+import { addMessage, print } from '../managers/messages.js'
 
-		this.fightCard()
+class Battle {
+	constructor(hero, npc) {
+		this.hero = hero
+		this.npc = npc
 	}
 
 	fight() {
-		console.log('Fight start!');
+		addMessage('Fight start')
 		let round = 1
-		while (this.red.ded() && this.blue.ded()) {
+
+		while (this.hero.isAlive() && this.npc.isAlive()) {
 			this.turn(round)
 			round++
 		}
 
-		if (this.red.ded()) console.log(`${this.red.name} wins!`);
-		if (this.blue.ded()) console.log(`${this.blue.name} wins!`);
+		if (this.hero.isAlive()) addMessage(`${this.hero.name} wins!`);
+		if (this.npc.isAlive()) addMessage(`${this.npc.name} wins!`);
+
+		print()
 	}
 
 	turn(num) {
-		console.log(`Turn #${num}`);
-		this.red.attack(this.blue)
-		this.blue.attack(this.red)
-	}
+		addMessage(`---------------\nTurn #${num}`);
 
-	fightCard() {
-		console.log(`
-			RED CORNER:	${this.red.name}
-			BLUE CORNER:	${this.blue.name}
-		`);
+		this.hero.startTurn()
+		this.hero.attack(this.npc)
+
+		addMessage(`${this.npc.name} hp: ${this.npc.currentHp}/${this.npc.maxHp}`);
+		if (!this.npc.isAlive()) return false
+
+		this.npc.startTurn()
+		this.npc.attack(this.hero)
+
+		addMessage(`${this.hero.name} hp: ${this.hero.currentHp}/${this.hero.maxHp}`);
 	}
 }
 

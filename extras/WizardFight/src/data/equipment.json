@@ -1,0 +1,49 @@
+{
+	"chipped_dagger": {
+		"name": "chipped dagger",
+		"slot": "hand",
+		"type": "weapon",
+		"atkMod": 5,
+		"pierce": 8,
+		"dmgType": ["bleed"],
+		"elementType": []
+	},
+	"rusty_helm": {
+		"name": "rusty helm",
+		"slot": "head",
+		"type": "armour",
+		"defMod": 2
+	},
+	"pitted_half-plate": {
+		"name": "pitted half-plate",
+		"slot": "torso",
+		"type": "armour",
+		"defMod": 4
+	},
+	"worn_boots": {
+		"name": "worn boots",
+		"slot": "legs",
+		"type": "armour",
+		"defMod": 2
+	},
+	"amulet_of_dampness": {
+		"name": "Amulet of Dampness",
+		"slot": "accessory",
+		"type": "armour",
+		"defMod": 1,
+		"statusMod": {
+			"type": "resistance",
+			"status": ["burn"]
+		}
+	},
+	"amulet_of_wetness": {
+		"name": "Amulet of Wetness",
+		"slot": "accessory",
+		"type": "armour",
+		"defMod": 1,
+		"statusMod": {
+			"type": "immunity",
+			"status": ["burn"]
+		}
+	}
+}

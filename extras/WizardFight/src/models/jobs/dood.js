@@ -1,11 +1,12 @@
 import Character from "../character.js";
 import statsMod from "../../util/stats.js";
+import * as rng from '../../util/rng.js'
 
 class Dood extends Character {
 	constructor(data) {
 		super(data)
 		this.stats = statsMod()
-		this.def = 12
+		this.def = 2
 		this.attacks = [
 			{
 				name: 'flail',
@@ -26,15 +27,6 @@ class Dood extends Character {
 		]
 	}
 
-	attack(target) {
-		const atk = this.attacks[Math.floor(Math.random() * this.attacks.length)]
-		console.log(atk.message);
-		console.log(`${this.name} used ${this.atk.name}`);
-		if (atk == 0) {
-			atk = 9999
-		}
-		target.takeDamage(atk)
-	}
 }
 
 export default Dood
